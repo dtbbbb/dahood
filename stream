@@ -1,0 +1,1015 @@
+repeat
+    task.wait()
+until game:IsLoaded()
+
+local consistware_Settins = {
+    Camlock = {
+        enable = false,
+        grabbed_check = false,
+        pickup_check = false,
+        wallcheck = false,
+        prediciton = 0.121,
+        smoothness = false,
+        smoothness_value = 0.0065,
+        aiming_part = "UpperTorso",
+        resolver = false, -----fucks ups prediction
+        autopred = false,
+        resolver_type = "Underground",
+        keybind = Enum.KeyCode.Q
+    },
+    target_aim = {
+        enable = false,
+        toggled = false,
+        prediciton = 0.121,
+        lookat = false,
+        resolver = false,
+        aiming_part = "HumanoidRootPart",
+        wallcheck = false,
+        grabbed_check = false,
+        pickup_check = false,
+        notify = false,
+        unlocked_on_knocked = false,
+        resolver_type = "Undeground",
+        reload_on_knocked = false,
+        target_strafe = {
+            toggle = false,
+            height = 0,
+            speed = 1,
+            distance = 4,
+            color = Color3.fromRGB(255,255,255)
+        },
+        keybind = Enum.KeyCode.Q,
+
+        tracer = false,
+        tracer_color = Color3.fromRGB(255,255,255),
+        fakehitbox = false,
+        fakehitbox_color = Color3.fromRGB(255,255,255),
+        fakehitbox_material = "ForceField",
+        Highlight = false,
+        Highlight_COlor =  Color3.fromRGB(255,255,255),
+        methodtoget = "Closet to mouse"
+
+    },
+
+    silent_aim = {
+        enable = false,
+        wallcheck = false,
+        grabbed_check = false,
+        pickup_check = false,
+        Random_hitbox = false,
+        chance = 100,
+        prediciton = 0.121,
+        aiming_part = "HumanoidRootPart",
+        crewcheck =false,
+        friendcheck = false,
+
+        fov = {
+            enable =false,
+            size = 100,
+            visible =false,
+            sizes =  0,
+            filled = false,
+            color = Color3.fromRGB(255,255,255)
+        }
+    },
+
+    anti_aim = {
+        vecspoofer = {
+            toggle = false,
+            X_Axis = 0,
+            Y_Axis = 0,
+            Z_Axis = 0,
+            multiple = 0,
+            desync = false
+        }
+    },
+
+    cframe_speed = {
+        enable = false,
+        toggled = false,
+        speed = 1,
+        keybind = Enum.KeyCode.Z
+    },
+
+
+
+    miscs = {
+        auto_stomp = false,
+        deley = 0,
+        bullet_tracer ={
+            toggle =false,
+            color = Color3.fromRGB(255,255,255)
+        },
+        anti_stomp = {
+            enable = false,
+            delata = 0,
+            anti_stommp_method = "Destroy"
+        },
+        world_ambince =  false,
+        world_ambince_color = Color3.fromRGB(255,255,255),
+        clone = {
+            toggle = false,
+            timedestroy = 1,
+            matreial = "Neon",
+            color = Color3.fromRGB(255,255,255),
+            Transpancy = 0
+        },
+        bhop = false,
+        auto_reload = false,
+        remove_jump_cooldown  =false,
+        anti_slow = false,
+        jumpstarfe = false,
+        jumpstarfe_speed = 2,
+        jumpbhopcooldown = 0,
+        bulletimpact = false,
+        bulletimpactmaterial = "Neon",
+        bulletimpactcolor = Color3.fromRGB(255,255,255),
+        granade_tracer = false,
+        granade_color = Color3.fromRGB(255,255,255),
+        bulletimpactdelay = 1
+    },
+
+    esp = {
+        toggle = false,
+        maxdis = math.huge,
+        box = false,
+        box_color = Color3.fromRGB(255,255,255),
+        box_filled = false,
+        tracer = false,
+        tracer_home = "Down",
+        tracer_Color = Color3.fromRGB(255,255,255),
+        healthbar = false,
+        health_text = false,
+        health_text_color = Color3.fromRGB(255,255,255),
+        health_font = 2,
+        armor_bar = false,
+        armor_emoji = false,
+        names = false,
+        names_font = 2,
+        names_color = Color3.fromRGB(255,255,255),
+        names_size = 12
+    },
+
+    display_target_info = { ----this will be drawing 
+    toggle = false,
+    health =false,
+    armor = false,
+    checkingwinning = false,
+    inventory = false
+    }
+}
+
+
+local storange = { Instance = {}, models= {}} ---
+
+----local functions----
+
+
+
+function checkifalive(player) --checks if the player is alive 
+    if player.Character:FindFirstChild("Humanoid") and player.Character.Humanoid.Health ~= 1 and player.Character:FindFirstChild("Head") then
+        return true
+    end
+end
+
+local function getSev(x)
+    return game:GetService(x)
+ end
+local teleporting = false
+getgenv().tweenteleport = function()
+    
+end
+
+function WallCheck(origin, selfpart) ---rewrteied 
+    if true then
+        local ignore = {game.Workspace.CurrentCamera, game.Players.LocalPlayer.Character, origin.Parent}
+        local parts = game.Workspace.CurrentCamera:GetPartsObscuringTarget({ origin.Position,selfpart.Position},ignore )
+        for _,v in pairs(parts) do
+            if v.Transparency >= 0.3 or 0.4 then
+                Storage.Instance[#Storage.Instance + 1] = v
+            end
+            if v.Material == Enum.Material.Glass then
+                Storage.Instance[#Storage.Instance + 1] = v
+            end
+        end
+        return #parts == 0
+    end
+    return true
+end
+
+function Wallcheck2(Player)
+    local raybeamkaboom = Ray.new(game.Players.LocalPlayer.Character.Head.Position, (Player.Position - game.Players.LocalPlayer.Character.Head.Position).Unit * 300)
+    local Part, Position = workspace:FindPartOnRayWithIgnoreList(raybeamkaboom, {game.Players.LocalPlayer.Character}, false, true)
+    if Part then
+        local Humanoid = Part.Parent:FindFirstChildOfClass('Humanoid')
+        if not Humanoid then
+            Humanoid = Part.Parent.Parent:FindFirstChildOfClass('Humanoid')
+        end
+        if Humanoid and Player and Humanoid.Parent == Player.Parent then
+            local Vector, OnScreen = workspace.CurrentCamera:WorldToScreenPoint(Player.Position)
+            if OnScreen then 
+                return true
+            end
+        end
+    end
+end
+
+function usechance(x)
+    x = math.floor(x)
+    local newchance = math.floor(Random.new().NextNumber(Random.new(), 0, 1) * 100) / 100
+    return newchance <= x / 100
+end
+
+function reloadgun()
+    if game:GetService("Players").LocalPlayer.Character:FindFirstChildWhichIsA("Tool") then
+        if game:GetService("Players").LocalPlayer.Character:FindFirstChildWhichIsA("Tool"):FindFirstChild("Ammo") then
+                game:GetService("ReplicatedStorage").MainEvent:FireServer("Reload", game:GetService("Players").LocalPlayer.Character:FindFirstChildWhichIsA("Tool"))
+            end
+    end
+end
+
+function cframefix()
+    if checkifalive(game.Players.LocalPlayer) then
+    for _, v in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+        if v:IsA("Script") and v.Name ~= "Health" and v.Name ~= "Sound" and v:FindFirstChild("LocalScript") then
+            v:Destroy()
+        end
+    end
+    game.Players.LocalPlayer.CharacterAdded:Connect(function(char)
+        repeat
+            task.wait()
+        until game.Players.LocalPlayer.Character
+        char.ChildAdded:Connect(function(child)
+            if child:IsA("Script") then 
+                if child:FindFirstChild("LocalScript") and checkifalive(game.Players.LocalPlayer) then
+                    child.LocalScript:FireServer()
+                end
+            end
+        end)
+    end)
+local glitch = false
+local clicker = false
+end
+end
+
+
+
+function destroybody()
+    for i,v in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+        if v:IsA("MeshPart") then
+            v:Destroy()
+        end
+    end
+end
+
+
+
+-----LOCALS----
+---faster way
+
+local target = nil
+local workspace = getSev("Workspace")
+local players = getSev("Players")
+local player = players.LocalPlayer
+local camera = workspace.CurrentCamera
+local runservice =  game:GetService("RunService")	
+local mouse = game.Players.LocalPlayer:GetMouse()
+local vec3 = Vector3.new
+local vec2 = Vector2.new
+local cf = CFrame.new
+local Rnew = Ray.new
+local mh = math.huge
+local cfa = CFrame.Angles
+local mp = math.pi
+local GuiInset = game:GetService("GuiService"):GetGuiInset().Y
+
+local mathhh = 0
+local consistware_Folder = Instance.new("Folder", workspace)
+local inputservice = game:GetService("UserInputService")
+local networtserviceping = game:GetService("Stats").Network.ServerStatsItem["Data Ping"]:GetValueString()
+local networthmax = string.split(networtserviceping,'(')
+local ping = tonumber(networthmax[1])
+local fakehitbox_part = Instance.new("Part", consistware_Folder)
+local targetlock_hightlight = Instance.new("Highlight",consistware_Folder)
+
+
+
+
+
+consistware_Folder.Name = "consistware"
+consistware_Folder.Parent = game.Workspace
+fakehitbox_part.CanCollide = false
+fakehitbox_part.Anchored = true
+fakehitbox_part.Shape = Enum.PartType.Ball
+fakehitbox_part.Size = vec3(10,10,10)
+
+
+
+local hitboxes =  {
+    "HumanoidRootPart",
+    "UpperTorso",
+    "LowerTorso",
+    "Head",
+    "RightHand",
+    "LeftHand",
+    "LeftFoot",
+    "RightFoot"
+}
+
+local main_locations = {
+    bank = cf(),
+    hidden_spot = cf()
+    ---lazy to make
+}
+
+
+local date_and_month_and_year = os.date("  %A, %d, %B, %Y")
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/tayex/balls/main/wink"))()
+local Window = Library:New({Name = "Niggersense - [ C O N S I S T ] - ( 4124476368 )"..date_and_month_and_year, Accent = Color3.fromRGB(255, 0, 255)})
+local drawing_shapes_api = loadstring(game:HttpGet("https://raw.githubusercontent.com/tayex/Sources/main/api"))()
+
+
+local Aimbot = Window:Page({Name = "Combat"})
+local Visuals = Window:Page({Name = "Misc"})
+local Settings = Window:Page({Name = "Settings"})
+
+--a
+
+local target_tab = Aimbot:Section({Name = "Target-Aim", Side = "Left"})
+local Cframe_tab = Visuals:Section({Name = "CFrame speed", Side = "Right"})
+
+local playervisals  = Visuals:Section({Name = "Player", Side = "Left"})
+local character_visuals = Visuals:Section({Name = "Character Visuals", Side = "Left"})
+local Settings_Main = Settings:Section({Name = "Main", Side = "Left"})
+
+local HVHTAPTARGET, TARGETLOCKVISUALS, autopredandetc2 = Aimbot:MultiSection({Sections = {"TargetStrafe", "Visuals"}, Side = "Left", Size = 400})
+local silent_tab  = Aimbot:Section({Name = "silent aim", Side = "Right"})
+
+local fovcirclesettings, predictionsettings1, aimingparts = Aimbot:MultiSection({Sections = {"FOV", "Predicting", "Aiming parts"}, Side = "Right", Size = 100})
+
+
+
+
+
+silent_tab:Toggle({Name = "Enable", Default = false, callback=function(x)
+    consistware_Settins.silent_aim.enable = x
+end})
+
+
+silent_tab:Toggle({Name = "wallcheck", Default = false, callback=function(x)
+    consistware_Settins.silent_aim.wallcheck = x
+end})
+
+
+silent_tab:Toggle({Name = "grabbed check", Default = false, callback=function(x)
+    consistware_Settins.silent_aim.grabbed_check = x
+end})
+
+
+silent_tab:Toggle({Name = "pickup check", Default = false, callback=function(x)
+    consistware_Settins.silent_aim.pickup_check = x
+end})
+
+
+silent_tab:Toggle({Name = "friends check", Default = false, callback=function(x)
+    consistware_Settins.silent_aim.friendcheck = x
+end})
+
+local fffovff = fovcirclesettings:Toggle({Name = "FOV", Default = false, callback=function(x)
+    consistware_Settins.silent_aim.fov.visible = x
+end})
+
+
+
+fffovff:Colorpicker({Info = "fov Color", Alpha = 0.75, Default = Color3.fromRGB(0, 0, 255), Callback=function(x) consistware_Settins.silent_aim.fov.color = x end})
+
+fovcirclesettings:Slider({Name = "Size", def = 100, min = 0, max = 500, callback=function(x)
+    consistware_Settins.silent_aim.fov.size = x
+end})
+
+predictionsettings1:Textbox({Name = "0.121",callback=function(x)
+    consistware_Settins.silent_aim.prediciton = x
+end})
+
+
+aimingparts:Dropdown({Name = "Aiming Part", options = {"HumanoidRootPart", "LowerTorso", "Head", "UpperTorso"}, def = "HumanoidRootPart", Callback=function(x)
+    consistware_Settins.silent_aim.aiming_part = x
+end})
+
+silent_tab:Slider({Name = "hit chance", def = 100,min = 0,max = 100,Callback=function(x)
+    consistware_Settins.silent_aim.chance = x
+end})
+
+
+local forcefield = false
+local colorgunchamdsdaf = Color3.fromRGB(0,0,255)
+local t2mungd2caca = character_visuals:Toggle({Name = "ForceField",Default = false,Callback=function(x)
+    forcefield = x
+while wait() do
+    if forcefield then
+        Players = game.Players.LocalPlayer
+    
+        Players.Character.Head.Material  = "ForceField"
+    Players.Character.UpperTorso.Material = "ForceField"
+    Players.Character.LeftHand.Material = "ForceField"
+    Players.Character.RightHand.Material = "ForceField"
+    Players.Character.LeftLowerArm.Material = "ForceField"
+    Players.Character.RightLowerArm.Material = "ForceField"
+    Players.Character.RightUpperArm.Material = "ForceField"
+    Players.Character.LeftUpperArm.Material = "ForceField"
+    Players.Character.LeftFoot.Material = "ForceField"
+    Players.Character.LeftLowerLeg.Material = "ForceField"
+    Players.Character.RightLowerLeg.Material = "ForceField"
+    Players.Character.LowerTorso.Material = "ForceField"
+    Players.Character.RightUpperLeg.Material = "ForceField"
+    Players.Character.LeftUpperLeg.Material = "ForceField"
+    Players.Character.Head.Material = "ForceField"
+    Players.Character.RightFoot.Material = "ForceField"
+    Players.Character['Body Colors'].LeftArmColor3 = colorgunchamdsdaf
+    Players.Character['Body Colors'].RightArmColor3 = colorgunchamdsdaf
+    Players.Character['Body Colors'].LeftLegColor3 = colorgunchamdsdaf
+    Players.Character['Body Colors'].RightLegColor3 = colorgunchamdsdaf
+    Players.Character['Body Colors'].HeadColor3 = colorgunchamdsdaf
+    Players.Character['Body Colors'].TorsoColor3 = colorgunchamdsdaf
+
+        for i,v in next, game:GetService('Players').LocalPlayer.Character:GetChildren() do
+            if v:IsA('Accessory') then
+                v.Handle.Material = "ForceField"
+                v.Handle.Color = colorgunchamdsdaf
+         end
+         end
+    else
+        game.Players.LocalPlayer.Character.LeftHand.Material = "Plastic"
+        game.Players.LocalPlayer.Character.RightHand.Material = "Plastic"
+        game.Players.LocalPlayer.Character.LeftLowerArm.Material = "Plastic"
+        game.Players.LocalPlayer.Character.RightLowerArm.Material = "Plastic"
+        game.Players.LocalPlayer.Character.LeftUpperArm.Material = "Plastic"
+        game.Players.LocalPlayer.Character.RightUpperArm.Material = "Plastic"
+        game.Players.LocalPlayer.Character.LeftFoot.Material = "Plastic"
+        game.Players.LocalPlayer.Character.RightFoot.Material = "Plastic"
+        game.Players.LocalPlayer.Character.LeftLowerLeg.Material = "Plastic"
+        game.Players.LocalPlayer.Character.RightLowerLeg.Material = "Plastic"
+        game.Players.LocalPlayer.Character.UpperTorso.Material = "Plastic"
+        game.Players.LocalPlayer.Character.LowerTorso.Material = "Plastic"
+        game.Players.LocalPlayer.Character.LeftUpperLeg.Material = "Plastic"
+        game.Players.LocalPlayer.Character.RightUpperLeg.Material = "Plastic"
+        game.Players.LocalPlayer.Character.Head.Material = "Plastic"
+
+        for i,v in next, game:GetService('Players').LocalPlayer.Character:GetChildren() do
+            if v:IsA('Accessory') then
+                v.Handle.Material = "Plastic"
+         end
+         end
+
+    end
+end
+
+
+
+end})
+
+t2mungd2caca:Colorpicker({Info = "PLAYER Color", Alpha = 0.75, Default = Color3.fromRGB(0, 0, 255), Callback=function(x) colorgunchamdsdaf = x end})
+
+
+
+
+
+local hookfun
+hookfun = hookfunction(wait, function(x)
+    if x == 1.5 and consistware_Settins.miscs.remove_jump_cooldown then
+        return hookfun() end return hookfun(x)
+end)
+
+
+local lolldd22rsdsd=  playervisals:Toggle({Name = "Clone",Default = false,Callback=function(x)
+    consistware_Settins.miscs.clone.toggle = x
+
+if  consistware_Settins.miscs.clone.toggle then
+    repeat
+        game.Players.LocalPlayer.Character.Archivable = true
+        local Clone = game.Players.LocalPlayer.Character:Clone()
+        for _,clone in next, Clone:GetDescendants() do
+            if clone.Name == "HumanoidRootPart" or clone:IsA("Humanoid") or clone:IsA("LocalScript") or clone:IsA("Script") or clone:IsA("Decal") then
+                clone:Destroy()
+            elseif clone:IsA("BasePart") or clone:IsA("Meshpart") or clone:IsA("Part")   then
+                if clone.Transparency == 1 then
+                    clone:Destroy()
+                else
+                    clone.CanCollide = false
+                    clone.Anchored = true
+                    clone.Material = consistware_Settins.miscs.clone.matreial
+                    clone.Color = consistware_Settins.miscs.clone.color
+                    clone.Transparency = consistware_Settins.miscs.clone.Transpancy
+                    clone.Size = clone.Size + Vector3.new(0.03, 0.03, 0.03)
+                    
+                    
+                end
+            end
+            pcall(function()
+                clone.CanCollide = false
+            end)
+        end
+        Clone.Parent = consistware_Folder
+                                            wait(consistware_Settins.miscs.clone.timedestroy)
+                Clone:Destroy()
+        
+until consistware_Settins.miscs.clone.toggle == false
+end
+end})
+
+lolldd22rsdsd:Colorpicker({Info = "Clone Color", Alpha = 0.75, Default = Color3.fromRGB(255, 255, 255), Callback=function(x) consistware_Settins.miscs.clone.color = x end})
+
+
+playervisals:Slider({Name = "Delay", def = 0.1,min = 0,max = 1,decimals = .1,Callback=function(x)
+    consistware_Settins.miscs.clone.timedestroy = x
+end})
+
+playervisals:Slider({Name = "Transpancy", def = 0,min = 0,max = 1,decimals = .1,Callback=function(x)
+    consistware_Settins.miscs.clone.Transpancy = x
+end})
+
+playervisals:Dropdown({Name = "Clone Material", options = {"Neon", "Glass","ForceField" }, def = "Neon", Callback=function(x)
+    consistware_Settins.miscs.clone.matreial = x
+end})
+
+
+Cframe_tab:Toggle({Name="Toggle", Default =false,Callback=function(x)
+    consistware_Settins.cframe_speed.enable = x
+end})
+
+Cframe_tab:Keybind({Name = "Cframe keybind", Default = Enum.KeyCode.Z, KeybindName = "Readjustment", Mode = "Hold", Pointer = "AimbotExtra_Readjustment",Callback=function(x)
+    consistware_Settins.cframe_speed.keybind = x
+end})
+
+Cframe_tab:Slider({Name = "Speed", def = 1,min = 1,max = 5,Callback=function(x)
+    consistware_Settins.cframe_speed.speed = x
+end})
+
+local lol2dsada = HVHTAPTARGET:Toggle({Name="Target Strafe", Default =false,Callback=function(x)
+    consistware_Settins.target_aim.target_strafe.toggle = x
+end})
+
+lol2dsada:Colorpicker({Info = "Target Strafe color", Alpha = 0.75, Default = Color3.fromRGB(255, 255, 255), Callback=function(x) consistware_Settins.target_aim.target_strafe.color = x end})
+
+HVHTAPTARGET:Slider({Name = "Height", def = 0,min = 0,max = 10,Callback=function(x)
+    consistware_Settins.target_aim.target_strafe.height = x
+end})
+
+HVHTAPTARGET:Slider({Name = "Speed", def = 1,min = 1,max = 10,Callback=function(x)
+    consistware_Settins.target_aim.target_strafe.speed = x
+end})
+
+HVHTAPTARGET:Slider({Name = "Distance", def = 4,min = 1,max = 25,Callback=function(x)
+    consistware_Settins.target_aim.target_strafe.distance = x
+end})
+
+local tracertarge = TARGETLOCKVISUALS:Toggle({Name="Tracer", Default =false,Callback=function(x)
+    consistware_Settins.target_aim.tracer = x
+end})
+
+
+tracertarge:Colorpicker({Info = "Tracer color", Alpha = 0.75, Default = Color3.fromRGB(255, 255, 255), Callback=function(x) consistware_Settins.target_aim.tracer_color = x end})
+
+local hightlicthrada = TARGETLOCKVISUALS:Toggle({Name="Highlight", Default =false,Callback=function(x)
+    consistware_Settins.target_aim.Highlight = x
+end})
+
+
+hightlicthrada:Colorpicker({Info = "Highlight's color", Alpha = 0.75, Default = Color3.fromRGB(255, 255, 255), Callback=function(x) consistware_Settins.target_aim.Highlight_COlor = x end})
+
+
+local partfigcar = TARGETLOCKVISUALS:Toggle({Name="Part", Default =false,Callback=function(x)
+    consistware_Settins.target_aim.fakehitbox = x
+end})
+
+
+partfigcar:Colorpicker({Info = "part's color", Alpha = 0.75, Default = Color3.fromRGB(255, 255, 255), Callback=function(x) consistware_Settins.target_aim.fakehitbox_color = x end})
+
+TARGETLOCKVISUALS:Dropdown({Name = "part material", options = {"Neon", "Glass","ForceField" }, def = "ForceField", Callback=function(x)
+    consistware_Settins.target_aim.fakehitbox_material = x
+end})
+
+
+
+target_tab:Toggle({Name="Enabled",Default=false,Callback=function(x)
+    consistware_Settins.target_aim.enable = x
+end})
+
+target_tab:Keybind({Name = "Keybind", callback = function(x) consistware_Settins.target_aim.keybind = x end})
+
+target_tab:Textbox({Name = "0.132", Callback=function(x)
+    consistware_Settins.target_aim.prediciton = x
+end})
+
+target_tab:Dropdown({Name = "Aiming Part", options = {"HumanoidRootPart", "LowerTorso", "Head", "UpperTorso"}, def = "HumanoidRootPart", Callback=function(x)
+    consistware_Settins.target_aim.aiming_part = x
+end})
+
+target_tab:Toggle({Name="Look At",Default=false,Callback=function(x)
+    consistware_Settins.target_aim.lookat = x
+end})
+
+target_tab:Toggle({Name="Wall Check",Default=false,Callback=function(x)
+    consistware_Settins.target_aim.wallcheck = x
+end})
+
+target_tab:Toggle({Name="Pickup Check",Default=false,Callback=function(x)
+    consistware_Settins.target_aim.pickup_check = x
+end})
+
+
+target_tab:Toggle({Name="Unlock on knocked",Default=false,Callback=function(x)
+    consistware_Settins.target_aim.unlocked_on_knocked = x
+end})
+
+
+target_tab:Toggle({Name="Resolve",Default=false,Callback=function(x)
+    consistware_Settins.target_aim.resolver = x
+end})
+
+target_tab:Dropdown({Name = "Resolve type", options = {"MoveDirection", "Delta", "nopred"}, def = "MoveDirection", Callback=function(x)
+    consistware_Settins.target_aim.resolver_type = x
+end})
+
+
+
+Settings_Main:Button({Name = "Unload", Callback = function() Window:Unload() end})
+
+
+
+Window:Initialize()
+ ---[[TARGET AIM]]
+local toggled_target_aim = consistware_Settins.target_aim.toggled 
+
+local tracer_line_targetlock = Drawing.new("Line")
+--------------------------------------------------------
+local circle_strafe = drawing_shapes_api:New3DCircle()
+
+circle_strafe.Transparency = 0.5
+circle_strafe.Thickness = 2
+
+ 
+function getclosesttargeetaim()
+    -----------GGS NOT COPIED ABD PASTE FROM THE OTHER FUNCTION NOPE
+    local target
+    local maxdis = math.huge 
+
+    for i,v in pairs(players:GetPlayers()) do
+       local knocked2 = false
+       local isntgrabbed2 = false
+       local wallchecker2 = false
+
+       if consistware_Settins.target_aim.wallcheck == true then
+           wallchecker2 = Wallcheck2(v.Character.HumanoidRootPart)
+       else
+           wallchecker2 = true
+       end
+
+   if consistware_Settins.target_aim.grabbed_check == true then
+       knocked2 = v.Character:WaitForChild("BodyEffects")["K.O"].Value ~= true
+   else
+       knocked2 = true
+   end
+
+
+
+   if consistware_Settins.target_aim.pickup_check == true then
+       isntgrabbed2 = v.Character:FindFirstChild("GRABBING_COINSTRAINT") == nil
+   else
+       isntgrabbed2 = true
+   end
+
+
+
+if v ~= game.Players.LocalPlayer and v.Character and v.Character:FindFirstChild("Humanoid") and wallchecker2 and knocked2 and isntgrabbed2 and v.Character.Humanoid.Health ~= 0  and v.Character:FindFirstChild("HumanoidRootPart") then
+            local position = camera:WorldToViewportPoint(v.Character.PrimaryPart.Position)
+            local magni = (vec2(position.X, position.Y) - vec2(mouse.X, mouse.Y)).magnitude
+            if magni < maxdis then
+                target = v
+                maxdis = magni
+            end
+        end
+    end
+    return target
+end
+
+function getclosesttargeetaimdistance()
+    -----------GGS NOT COPIED ABD PASTE FROM THE OTHER FUNCTION NOPE
+    local target
+    local maxdis = math.huge 
+
+    for i,v in pairs(players:GetPlayers()) do
+       local knocked2 = false
+       local isntgrabbed2 = false
+       local wallchecker2 = false
+
+       if consistware_Settins.target_aim.wallcheck == true then
+           wallchecker2 =   Wallcheck(v.Character.HumanoidRootPart, game.Players.LocalPlayer.Character.HumanoidRootPart)
+       else
+           wallchecker2 = true
+       end
+
+   if consistware_Settins.target_aim.grabbed_check == true then
+       knocked2 = v.Character:WaitForChild("BodyEffects")["K.O"].Value ~= true
+   else
+       knocked2 = true
+   end
+
+
+
+   if consistware_Settins.target_aim.pickup_check == true then
+       isntgrabbed2 = v.Character:FindFirstChild("GRABBING_COINSTRAINT") == nil
+   else
+       isntgrabbed2 = true
+   end  
+   
+
+
+if v ~= game.Players.LocalPlayer and v.Character and v.Character:FindFirstChild("Humanoid") and wallchecker2 and knocked2 and isntgrabbed2 and v.Character.Humanoid.Health ~= 0  and v.Character:FindFirstChild("HumanoidRootPart") then
+    local DistanceFromPlayer = (v.Character.HumanoidRootPart.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude
+    if maxdis > DistanceFromPlayer then
+            target = v
+            maxdis = DistanceFromPlayer
+        end
+    end
+end
+    return target
+end
+
+
+
+inputservice.InputBegan:Connect(function(x)
+    if x.KeyCode == consistware_Settins.target_aim.keybind and consistware_Settins.Camlock.enable == false then
+        if consistware_Settins.target_aim.enable == true then
+            toggled_target_aim = not toggled_target_aim
+            if consistware_Settins.target_aim.methodtoget == 'Closet to mouse' then
+            target = getclosesttargeetaim()
+            elseif consistware_Settins.target_aim.methodtoget == "Closest to distance" then
+                target = getclosesttargeetaimdistance()
+            end
+
+            runservice.Stepped:Connect(function()
+                if consistware_Settins.target_aim.unlocked_on_knocked then
+                    if target.Character.Humanoid.Health < 1 then
+                        toggled_target_aim = false
+                    end
+                
+                    if consistware_Settins.target_aim.reload_on_knocked then
+                        if target.Character.Humanoid.Health < 1   then
+                            toggled_target_aim = false
+                        end
+                    end
+
+
+            end
+            end)
+
+            while consistware_Settins.target_aim.enable and toggled_target_aim do
+                task.wait()
+                if  consistware_Settins.target_aim.enable  and consistware_Settins.target_aim.lookat then
+                    if toggled_target_aim then
+                    cframefix()
+                    game.Players.LocalPlayer.Character:WaitForChild("Humanoid")
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame.Position, vec3(target.Character.HumanoidRootPart.CFrame.X, game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame.Position.Y, target.Character.HumanoidRootPart.CFrame.Z))    
+                    game.Players.LocalPlayer.Character.Humanoid.AutoRotate = false   
+                    else
+                        game.Players.LocalPlayer.Character.Humanoid.AutoRotate = true ---ty roblox forums <3
+                end
+                end
+            end
+
+            
+
+            if consistware_Settins.target_aim.notify and toggled_target_aim then
+                notify(target.Name, 2)
+            elseif consistware_Settins.target_aim.notify and toggled_target_aim == false then
+                notify("unlocked", 2)
+            end
+
+        else
+            
+            if target ~= nil then
+                target = nil
+            end
+        end
+    end
+end)
+
+
+
+
+
+runservice.Stepped:Connect(function(a, deltaTime)
+    if target ~= nil and consistware_Settins.target_aim.target_strafe.toggle and consistware_Settins.target_aim.enable and toggled_target_aim and game.Players.LocalPlayer.Character:WaitForChild("Humanoid") then
+    
+        mathhh = (mathhh + deltaTime / consistware_Settins.target_aim.target_strafe.speed) %1
+        circle_strafe.Visible = true
+        circle_strafe.Position = target.Character.HumanoidRootPart.Position
+        circle_strafe.Radius = consistware_Settins.target_aim.target_strafe.distance
+        circle_strafe.Color = consistware_Settins.target_aim.target_strafe.color
+        cframefix()
+        
+       game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = cfa(0, 2 * mp * mathhh, 0) * cf(0, 0, consistware_Settins.target_aim.target_strafe.distance) + target.Character.PrimaryPart.Position + vec3(0,consistware_Settins.target_aim.target_strafe.height,0)
+   else
+        circle_strafe.Visible = false
+   end
+end)
+
+runservice.Stepped:Connect(function()
+    if toggled_target_aim and consistware_Settins.target_aim.enable then
+    local VIEWPOINT = camera:WorldToViewportPoint(target.Character[consistware_Settins.target_aim.aiming_part].Position+(target.Character[consistware_Settins.target_aim.aiming_part].Velocity*consistware_Settins.target_aim.prediciton))
+        
+       if consistware_Settins.target_aim.tracer then
+       tracer_line_targetlock.From = vec2(mouse.X, mouse.Y + GuiInset)
+       tracer_line_targetlock.To = vec2(VIEWPOINT.X,VIEWPOINT.Y)
+       tracer_line_targetlock.Visible = toggled_target_aim
+
+       tracer_line_targetlock.Thickness = 1.5
+       tracer_line_targetlock.Color = consistware_Settins.target_aim.tracer_color
+
+       
+       end
+
+       if consistware_Settins.target_aim.fakehitbox then
+           lodlasdolafa = target.Character.PrimaryPart.Position
+           
+           fakehitbox_part.CFrame = cf(lodlasdolafa.X,lodlasdolafa.Y,lodlasdolafa.Z)
+           fakehitbox_part.Color = consistware_Settins.target_aim.fakehitbox_color
+           fakehitbox_part.Material = consistware_Settins.target_aim.fakehitbox_material
+       end
+
+       if consistware_Settins.target_aim.Highlight then
+           targetlock_hightlight.Parent = target.Character
+           targetlock_hightlight.FillColor = consistware_Settins.target_aim.Highlight_COlor
+       end
+
+    else
+        targetlock_hightlight.Parent = consistware_Folder
+        fakehitbox_part.CFrame = cf(99999,99999,99999)
+        tracer_line_targetlock.Visible = false
+    end
+end)
+
+
+
+---the function---
+
+local target_metable = getrawmetatable(game)
+local target_aim_old = target_metable.__namecall
+setreadonly(target_metable, false)
+target_metable.__namecall = newcclosure(function(...)
+    local args = {...}
+    if consistware_Settins.target_aim.enable and toggled_target_aim and getnamecallmethod() == "FireServer" and args[2] == "UpdateMousePos" then
+        if consistware_Settins.target_aim.resolver == true and consistware_Settins.target_aim.resolver_type == "UnderGround" then
+            target.Character.Humanoid.HipHeight = 0
+            local aiming4141r1resloerggs = vec3(target.Character[consistware_Settins.target_aim.aiming_part].Velocity.X,0,target.Character[consistware_Settins.target_aim.aiming_part].Velocity.Z)
+            args[3] = target.Character[consistware_Settins.target_aim.aiming_part].Position + aiming4141r1resloerggs * consistware_Settins.target_aim.prediciton
+        elseif consistware_Settins.target_aim.resolver == true and consistware_Settins.target_aim.resolver_type == "Revesed" then
+            args[3] = target.Character[consistware_Settins.target_aim.aiming_part].Position - (target.Character[consistware_Settins.target_aim.aiming_part].Velocity * consistware_Settins.target_aim.prediciton)
+        elseif consistware_Settins.target_aim.resolver == true and consistware_Settins.target_aim.resolver_type == "HVH (nopred)" then
+            args[3] = target.Character[consistware_Settins.target_aim.aiming_part].Position
+        else
+             args[3] = target.Character[consistware_Settins.target_aim.aiming_part].Position + (target.Character[consistware_Settins.target_aim.aiming_part].Velocity * consistware_Settins.target_aim.prediciton)
+        end
+            return target_aim_old(unpack(args))
+    end
+    return target_aim_old(...)
+end)
+
+--silebt aim
+
+local silient_aim_circle = Drawing.new("Circle")
+silient_aim_circle.Thickness = 2
+silient_aim_circle.Filled = consistware_Settins.silent_aim.fov.filled
+silient_aim_circle.NumSides = 10
+
+
+
+
+
+
+
+
+
+
+function FindClosestUser()
+    local closestPlayer
+    local shortestDistance = consistware_Settins.silent_aim.fov.size
+    local chances = usechance(consistware_Settins.silent_aim.chance)
+
+    local checkcer = false
+
+    
+
+    for i, v in pairs(game.Players:GetPlayers()) do
+        if v ~= game.Players.LocalPlayer and v.Character and v.Character:FindFirstChild("Humanoid") and v.Character.Humanoid.Health ~= 0 and v.Character:FindFirstChild("HumanoidRootPart") then
+            local pos, IsVisibleOnViewPort = game.Workspace.CurrentCamera:WorldToViewportPoint(v.Character.PrimaryPart.Position)
+
+            if IsVisibleOnViewPort then
+                local magnitude = (Vector2.new(pos.X, pos.Y) - Vector2.new(game.Players.LocalPlayer:GetMouse().X, game.Players.LocalPlayer:GetMouse().Y)).magnitude
+                    if  magnitude < shortestDistance and chances == true then
+                        if (not consistware_Settins.silent_aim.friendcheck or not v:IsFriendsWith(game.Players.LocalPlayer.UserId)) and (not consistware_Settins.silent_aim.grabbed_check or v.Character:WaitForChild("BodyEffects")["K.O"].Value ~= true) and (not consistware_Settins.silent_aim.pickup_check or v.Character:FindFirstChild("GRABBING_COINSTRAINT") == nil) and (not consistware_Settins.silent_aim.wallcheck or WallCheck(v.Character.HumanoidRootPart, game.Players.LocalPlayer.Character.HumanoidRootPart)) then
+                            closestPlayer = v
+                            shortestDistance = magnitude
+                        end
+                    end
+                end
+            end
+        end
+
+    return closestPlayer, shortestDistance
+end
+
+
+
+
+
+
+local gmt = getrawmetatable(game)
+setreadonly(gmt, false)
+local old = gmt.__namecall
+gmt.__namecall =newcclosure(function(...)
+        local args = {...}
+        local method = getnamecallmethod()
+        if consistware_Settins.silent_aim.enable  and method == "FireServer" and args[2] == "UpdateMousePos" and target ~= nil then
+            args[3] = target.Character.HumanoidRootPart.Position + (target.Character.HumanoidRootPart.Velocity * consistware_Settins.silent_aim.prediciton)
+            return old(unpack(args))
+        end
+        return old(...)
+    end)
+
+    runservice.Stepped:Connect(function()
+        if consistware_Settins.silent_aim.enable then
+            silient_aim_circle.Visible = consistware_Settins.silent_aim.fov.visible
+            silient_aim_circle.Radius = consistware_Settins.silent_aim.fov.size
+            silient_aim_circle.Position = vec2(mouse.X, mouse.Y + GuiInset)
+            silient_aim_circle.Color = consistware_Settins.silent_aim.fov.color
+            target = FindClosestUser()
+        else
+            silient_aim_circle.Visible = false
+        end
+    end)
+
+
+--[[
+    
+███╗░░░███╗██╗░██████╗░█████╗░
+████╗░████║██║██╔════╝██╔══██╗
+██╔████╔██║██║╚█████╗░██║░░╚═╝
+██║╚██╔╝██║██║░╚═══██╗██║░░██╗
+██║░╚═╝░██║██║██████╔╝╚█████╔╝
+╚═╝░░░░░╚═╝╚═╝╚═════╝░░╚════╝░
+
+]]
+---copied and pasted from my other script(THAT I MADE )
+inputservice.InputBegan:Connect(function(f)
+    if f.KeyCode == consistware_Settins.cframe_speed.keybind then
+        if consistware_Settins.cframe_speed.toggled == false then
+        consistware_Settins.cframe_speed.toggled = true
+        else
+            consistware_Settins.cframe_speed.toggled = false
+        end
+    end
+end)
+
+runservice.RenderStepped:Connect(function()
+    
+    if consistware_Settins.cframe_speed.enable  then
+        if consistware_Settins.cframe_speed.toggled and checkifalive(game.Players.LocalPlayer) then
+         game:GetService("RunService").Stepped:wait()
+         cframefix()
+         game.Players.LocalPlayer.Character:WaitForChild("Humanoid")
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame + game.Players.LocalPlayer.Character.Humanoid.MoveDirection * consistware_Settins.cframe_speed.speed 
+        end
+    end
+
+end)
+
+
+runservice.Heartbeat:Connect(function()
+    if consistware_Settins.anti_aim.vecspoofer.toggle and consistware_Settins.anti_aim.vecspoofer.desync == false and checkifalive(game.Players.LocalPlayer) then
+       local oldpos= game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity
+            game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.new(consistware_Settins.anti_aim.vecspoofer.X_Axis, consistware_Settins.anti_aim.vecspoofer.Y_Axis, consistware_Settins.anti_aim.vecspoofer.Z_Axis) * consistware_Settins.anti_aim.vecspoofer.multiple
+            runservice.RenderStepped:Wait()
+            game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity = oldpos
+    elseif consistware_Settins.anti_aim.vecspoofer.desync == true and consistware_Settins.anti_aim.vecspoofer.toggle == false and checkifalive(game.Players.LocalPlayer) then
+        local olspo =  game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity cframefix() 
+          game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame *  CFrame.Angles(0,360, 0)
+     game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.new(olspo.X + math.random(1000,10000) ,olspo.Y + math.random(1000,1000),olspo.Z + math.random(1000,10000))
+     runservice.RenderStepped:wait()
+        game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity =  olspo
+        runservice.RenderStepped:wait()
+    end
+end)
+
+
+local OldNameCall = nil
+OldNameCall = hookmetamethod(game, "__namecall", function(Self, ...)
+    local NameCallMethod = getnamecallmethod()
+
+    if tostring(string.lower(NameCallMethod)) == "kick" then
+        return nil
+    end
+    
+    return OldNameCall(Self, ...)
+end)
