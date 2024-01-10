@@ -5,7 +5,7 @@ getgenv().Fix = true
 getgenv().TeclasWS = {
     ["tecla1"] = "M", -- speed +5
     ["tecla2"] = "N", -- speed -5
-    ["tecla3"] = "V" -- toggle  
+    ["tecla3"] = "Z" -- toggle  
 }
 
 
