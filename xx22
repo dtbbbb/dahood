@@ -24,12 +24,12 @@ getgenv().DNS = {
             Enabled = true,
             Key = "C",
             UnlockKey = "Z",
-            SmoothLock = true,
-            Smoothness = 0.0312,
+            SmoothLock = False,
+            Smoothness = 0.01,
             PredictMovement = true,
-            Prediction = 0.072,
+            Prediction = 0.140,
             Shake = true,
-            ShakeValue = 19,
+            ShakeValue = 16,
             Parts = {"Head"}
         },
         FOV = {
