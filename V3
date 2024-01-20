@@ -6,7 +6,7 @@
 
 getgenv().Looten = {
     ['StartUP'] = {
-        Key = '.gg/lootenconfigs', -- replace with luarmor key
+        Key = '', -- replace with luarmor key
         UWP_Optimize = true,
         UnlockFPS = true,
         Intro = true
