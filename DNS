@@ -13,7 +13,7 @@ getgenv().DNS = {
         },
         FOV = {
             ShowFOV = true,
-            Radius = 70,
+            Radius = 9999,
             Color = Color3.fromRGB(0, 71, 171),
             Filled = false,
             Transparency = 0.8
@@ -23,7 +23,7 @@ getgenv().DNS = {
         Main = {
             Enabled = true,
             Key = "Q",
-            UnlockKey = "T",
+            UnlockKey = "Z",
             SmoothLock = false,
             Smoothness = 0.013,
             PredictMovement = true,
