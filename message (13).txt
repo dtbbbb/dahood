@@ -1,0 +1,222 @@
+-- im too lazy to make a better toggle check so yea this is indeedly not my force coding skills
+getgenv().Settings = {
+    TrueDesync = {
+        ["Enabled"] = (true),
+        ["Keybind"] = (Enum.KeyCode.Z),
+        ["Delay"] = (0.145),
+    },
+    VelocityDesync = { --// of course this is much less accurate
+    ["Enabled"] = (false),
+    ["Keybind"] = (Enum.KeyCode.X),
+    ["Velocity"] = {
+        ["X"] = (0),
+        ["Y"] = (0),
+        ["Z"] = (-1)
+    },
+    },
+    Visuals = {
+        Trail = {
+            ["Enabled"] = (true),
+            ["Keybind"] = (Enum.KeyCode.Z),
+            ["Color"] = Color3.fromRGB(0, 0, 0)
+        },
+        AimViewer = {
+            ["Enabled"] = (true),
+            ["Keybind"] = (Enum.KeyCode.T),
+            ["Color"] = Color3.fromRGB(0, 0, 0)
+        },
+    },
+}
+
+
+-- Variables (local)
+local Enabled = getgenv().Settings.TrueDesync.Enabled
+local stat = false
+local desync = getgenv().Settings
+local NotificationLibrary = loadstring(game:HttpGet("https://raw.githubusercontent.com/AbstractPoo/Main/main/Notifications.lua"))()
+
+-- Notify function
+function Notify(Description) --// Helpful to store notify in functions but in this script its totally not for not using it alot
+NotificationLibrary:notify {
+    Title = "Desync",
+    Description = Description, 
+    Icon = 6023426926,
+}
+end
+
+game:GetService("UserInputService").InputBegan:Connect(function(keybind, processed)
+    if keybind.KeyCode == getgenv().Settings.TrueDesync.Keybind and processed == false then
+    Enabled = not Enabled
+   Notify(tostring(Enabled)) --// Calling the notify function
+    end
+end
+)
+
+spawn(function()
+while wait() do
+stat = true
+task.wait(desync.TrueDesync.Enabled)
+stat = false
+end
+end
+)
+
+game.RunService.Heartbeat:Connect(function()
+    if Enabled then
+        local Old = game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame + game.Players.LocalPlayer.Character.Humanoid.MoveDirection * 0.029
+        game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = stat
+        game.RunService.RenderStepped:Wait()
+        game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = Old
+    end
+end
+)
+--------------------------------> Velocity Desync <---------------------------------------------
+local VelEnabled = desync.VelocityDesync.Enabled
+--// input service to check the keybind
+game:GetService("UserInputService").InputBegan:Connect(function(vkeybind, velprocessed)
+    if vkeybind.KeyCode == desync.Velocity.Keybind and velprocessed == false then
+    VelEnabled = not VelEnabled
+    NotificationLibrary:notify {
+        Title = "Velocity Desync",
+        Description = (tostring(VelEnabled)), 
+        Icon = 6023426926,
+    }
+    end
+end
+)
+
+game:GetService("RunService").heartbeat:Connect(function()
+    if VelEnabled == true then 
+    local plrvelocity = game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity --// defining the player velocity
+    plrvelocity = Vector3.new(desync.VelocityDesync.Velocity.X, desync.VelocityDesync.Velocity.Y, desync.VelocityDesync.Velocity.Z) * (2^16) --// setting the player velocity
+    game:GetService("RunService").RenderStepped:Wait() --// loop on player movement / render
+    game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity = plrvelocity --// looping the velocity change made above
+    end
+end
+)
+
+--------------------------------> Trail <---------------------------------------------
+local TrailEnabled = desync.Visuals.Trail.Enabled
+game:GetService("UserInputService").InputBegan:Connect(function(tkeybind, tprocessed)
+    if tkeybind.KeyCode == desync.Visuals.Trail.Enabled and tprocessed == false then
+        TrailEnabled = not TrailEnabled
+    NotificationLibrary:notify {
+        Title = "Visuals | Trail",
+        Description = (tostring(TrailEnabled)), 
+        Icon = 6023426926,
+    }
+    end
+end
+)
+if TrailEnabled then
+    local Character = game.Players.LocalPlayer.Character
+    for i,v in pairs(Character:GetChildren()) do
+         if v:IsA("BasePart") then
+    local trail = Instance.new("Trail", v)
+    trail.Texture = "rbxassetid://1390780157"
+       trail.Parent = v
+       local attachment0 = Instance.new("Attachment", v)
+       attachment0.Name = "TrailAttachment0"
+       local attachment1 = Instance.new("Attachment",game.Players.LocalPlayer.Character.HumanoidRootPart)
+       attachment1.Name = "TrailAttachment1"
+       trail.Attachment0 = attachment0
+       trail.Attachment1 = attachment1
+       trail.Color = ColorSequence.new(desync.Visuals.Trail.Color)
+         end
+    end
+end
+--------------------------------> Trail <---------------------------------------------
+local Enabled = desync.Visuals.AimViewer.Enabled
+local Color = desync.Visuals.AimViewer.Color
+local Keybind = desync.Visuals.AimViewer.Keybind
+local Method = "MousePos" -- <------ By din>
+
+if game.PlaceId == 2788229376 then
+    Method = "MousePos"
+end
+
+
+Enabled = true
+
+local RunService = game:GetService("RunService")
+local LocalNigger = game.Players.LocalPlayer
+local NiggerMouse = LocalNigger:GetMouse()
+local CurrentTarget;
+
+
+
+function getgun()
+    for i,v in pairs(CurrentTarget.Character:GetChildren()) do
+        if v and (v:FindFirstChild('Default') or v:FindFirstChild('Handle') )then
+            return v
+        end
+    end
+end
+
+
+function get_closet()
+    local Tracer = math.huge
+    local Attachment;
+
+
+
+    for i, v in pairs(game.Players:GetPlayers()) do
+        if v ~= LocalNigger and v.Character and v.Character:FindFirstChild("Head") and  v.Character:FindFirstChild("HumanoidRootPart")  then
+            local Attachment1 = game.Workspace.CurrentCamera:WorldToViewportPoint(v.Character.PrimaryPart.Position)
+            local d = (Vector2.new(NiggerMouse.X, NiggerMouse.Y) - Vector2.new(Attachment1.X, Attachment1.Y)).Magnitude
+
+            if Tracer > d then
+                Attachment = v
+                Tracer = d
+            end
+        end
+    end
+
+    return Attachment
+end
+
+NiggerMouse.KeyDown:Connect(function(z)
+    if z == Keybind then
+        CurrentTarget = get_closet()
+        NotificationLibrary:notify {
+            Title = "Visuals | AimViewer",
+            Description = "Target: "..(tostring(CurrentTarget.Name)), 
+            Icon = 6023426926,
+        }
+    end
+end)
+ 
+local Tracer = Instance.new("Beam")
+Tracer.Segments = 1
+Tracer.Width0 = 0.2
+Tracer.Width1 = 0.2
+Tracer.Color = ColorSequence.new(Color)
+Tracer.FaceCamera = true
+local Attachment = Instance.new("Attachment")
+local Attachment1 = Instance.new("Attachment")
+Tracer.Attachment0 = Attachment
+Tracer.Attachment1 = Attachment1
+Tracer.Parent = workspace.Terrain
+Attachment.Parent = workspace.Terrain
+Attachment1.Parent = workspace.Terrain
+
+task.spawn(function()
+    RunService.RenderStepped:Connect(function()
+ 
+    local character = LocalNigger.Character
+        if not character then
+        Tracer.Enabled = false
+        return
+    end
+
+    if Enabled  and getgun() and CurrentTarget.Character:FindFirstChild("BodyEffects") and CurrentTarget.Character:FindFirstChild("Head")  then
+        Tracer.Enabled = true
+        Attachment.Position =  CurrentTarget.Character:FindFirstChild("Head").Position
+        Attachment1.Position = CurrentTarget.Character.BodyEffects[Method].Value
+    else
+        Tracer.Enabled = false
+    end
+
+    end)
+end)
