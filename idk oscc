@@ -1,0 +1,224 @@
+--[[
+    READ THIS BEFORE EXECUTING FOR THE FIRST TIME
+    - EVERYTIME THERE IS AN UPDATE YOU WILL LIKELY HAVE TO ADD NEW SETTINGS TO YOUR CONFIG SO MAKE SURE TO CHECK THE DISCORD FOR UPDATES
+
+    • 2 Keybinds must not be the same even if the feature they're associated with is disabled
+    • You must not unbind any keybinds even if the feature they're associated with is disabled
+    • If you want to visualize what your Regular Silent is doing, set RegularModeVisualizer to true
+    • BoxFOV ONLY works with Target Silent **UNLESS** you set RegularModeVisualizer to true and use Regular Silent
+    • Triggerbot as of right now ONLY works with Target Silent
+--]]
+
+script_key="";
+
+getgenv().Silent = {
+    Mode = "Target", -- Target, Regular
+    ModeType = "Unlegit", -- Legit, Unlegit, BoxFOV() (LEGIT IS RECOMMENDED ACTS AS AN ANTICURVE) (Use unlegit if you don't want to hit realistic prediction points) 
+    HitMode = "ClosestBodypart", -- ClosestPoint / ClosestBodypart (ClosestPoint is more legit)
+    Prediction = 0.13249, -- Depending on your ping you might have to set this to a different value, the higher the ping, the higher the prediction. (0.119 is recommended for 60-70 ping)
+    AutoPrediction = true, -- If true, prediction will be automatically set based on your ping using PredefinedPredictions
+    RegularModeVisualizer = true
+
+}
+
+getgenv().Camlock = {
+    Enabled = false,
+    SafetyMeasures = true, -- If true, camlock will not work if you are in thirdperson without shiftlock
+    Prediction = 0.128012435241356, -- How much the camera will predict the target's movement
+    Stickiness = 0.148601475, -- How much the camera will stick to the target
+    UseTarget = true, -- If true, camlock will be synced with whoever you are targeting and will immediately follow them (recommnded for target silent)
+    Parts = {"Head", "UpperTorso", "LowerTorso"},
+    Activation = { -- Activation method is convenient if you're using Regular Silent
+        Mode = "Keybind", -- Mouse, Keybind 
+        Type = "Toggle", -- Hold, Toggle
+        Keybind = "Q",
+        MouseButton = "RightButton" -- You have to right click to use camlock
+    },
+    FOV = 1000, -- How big the FOV is
+    Smoothness = 0.0181575, -- How smooth the camera will move
+    AirShot = true,
+    AirShotSmooth = 0.0576, -- How smooth the camera will move when you are in the air    
+    ShakeValue = { -- Reference: https://t4.ftcdn.net/jpg/05/12/86/27/360_F_512862789_abYbb2RPLzpN8aAjteTBb4xGnRgqVSyw.jpg
+        X = 0, -- How much the camera will shake on the X axis
+        Y = 0, -- How much the camera will shake on the Y axis
+        Z = 0 -- How much the camera will shake on the Z axis
+    }, -- How much the camera will shake
+    EasingStyle = "Bounce"
+    --[[
+    Linear, Sine, Back, Quad, Quar, Quint, Bounce, Elastic, Exponential, Circular, Cubic
+
+    More info: https://cdn.discordapp.com/attachments/1040757112109801493/1079468332715098122/EasingStyles.png
+    ]] --
+}
+
+getgenv().SafetyMeasures = {
+    NoFloorShots = true,
+    AntiCurve = {
+        Enabled = false,
+        X = 80, -- If the player position is X pixels away from the X axis, it will not redirect the shots
+        Y = 80, -- If the player position is Y pixels away from the Y axis, it will not redirect the shots
+        PrintDistance = true -- If true, it will print the distance between the player and the X and Y axis, this is useful for finding the perfect values for X and Y for you
+    },
+    OverrideYAxis = true -- will override your y axis meaning VERY LEGIT!
+}
+
+getgenv().Prediction_Points = { -- Ensures that you ONLY hit realistic prediction points
+    Power = 7.75 -- Lowest is 1 (most realistic and harder to hit)
+}
+
+getgenv().FOV = {
+    Visible = true,
+    Thickness = 0.5,
+    NumSides = 50,
+    Radius = 1,
+    Filled = false,
+    Transparency = 0.2,
+    Color = Color3.fromRGB(255, 255, 255),
+
+    BoxFOV = {
+        Visible = false,
+        Thickness = 2,
+        Height = 2,
+        Width = 2,
+        Color = Color3.fromRGB(255, 0, 0)
+    }
+}
+
+getgenv().Tracer = { -- Only works with target silent
+    Visible = true,
+    Thickness = 0.5,
+    Color = Color3.fromRGB(255, 255, 255)
+}
+
+getgenv().Ranges = {
+    LongDistance = 65,
+    MediumDistance = 35,
+    ShortDistance = 15
+}
+
+getgenv().Macro = {
+    Enabled = true,
+    Mode = "Hold", -- Hold, Toggle
+    Type = "ThirdPerson", -- FirstPerson, ThirdPerson,
+    BypassMacroPatch = true,
+    NoClipMacro = true,
+    Delay = 0.001
+}
+
+getgenv().Guns = {
+    FOVS = {
+        -- {ShortDistanceFOV, MediumDistanceFOV, LongDistanceFOV}
+        Revolver = {4, 3, 2.75},
+        DoubleBarrel = {6.25, 5, 4.5},
+        Shotgun = {6.5, 6, 5.75},
+        TacticalShotgun = {6.5, 6, 5.75},
+        SMG = {1, 1, 1},
+        Silencer = {1, 1, 1},
+        AssaultRifle = {1, 1, 1},
+        Others = {1, 1, 1}
+    }
+}
+
+getgenv().Hitchances = { -- Higher the number, higher the chance of hitting MAX IS 100
+    Ground = {
+        Revolver = 100,
+        DoubleBarrel = 100,
+        Shotgun = 100,
+        TacticalShotgun = 100,
+        SMG = 100,
+        Silencer = 100,
+        AssaultRifle = 100,
+        Others = 100
+    },
+    Air = {
+        Revolver = 100,
+        DoubleBarrel = 100,
+        Shotgun = 100,
+        TacticalShotgun = 100,
+        SMG = 100,
+        Silencer = 100,
+        AssaultRifle = 100,
+        Others = 100
+    }
+}
+
+getgenv().Misc = {
+    HideVisualsOnStart = true, -- Will hide visuals upon execution
+    Raid_Awareness = true,
+	FPSBoost = false,
+    RemoveSeats = false,
+    AntiFling = false
+}
+
+getgenv().Keybinds = {
+    TargetSilent = "Q",
+    TargetUnlock = "Z",
+    NormalSilToggle = "P",
+    Anti_Lock = "V",
+    Triggerbot = "B",
+    Raid_Awareness = "T",
+    HideVisuals = "M",
+    Macro = "C",
+    NoClipMacro = "H",
+    OverrideYAxisToggle = "J"
+}
+
+getgenv().Anti_Lock = {
+    Enabled = false,
+    Type = "Sides", -- NormalDS, PredictionDisabler, Sides
+    Mode = "Toggle"
+}
+
+getgenv().Triggerbot = { -- Only works with target silent for safety reasons
+    Enabled = true,
+    FOV = {
+        Visible = false,
+        Thickness = 0.5,
+        NumSides = 50,
+        Radius = 2.25,
+        Filled = false,
+        Transparency = 0.2,
+        Color = Color3.fromRGB(0, 0, 0)
+    },
+    Parts = {"Head", "UpperTorso", "LowerTorso"},
+    MinDelay = 0.001,
+    MaxDelay = 0.001,
+    ModeType = "Unlegit",
+    BoxSync = true,
+    Mode = "Hold"
+}
+
+getgenv().MemSpoofer = {
+    Enabled = false,
+    MinMemory = 940,
+    MaxMemory = 942,
+    MaxDelay = 1.5,
+    MinDelay = 1
+}
+
+getgenv().PredefinedPredictions = { -- THIS WILL ONLY WORK IF YOU HAVE AUTOPREDICTION ON
+    Ping30_40 = 0.121,
+    Ping40_50 = 0.12354923,
+    Ping50_60 = 0.12585,
+    Ping60_70 = 0.1321687,
+    Ping70_80 = 0.1351382,
+    Ping80_90 = 0.1412591,
+    Ping90_100 = 0.143902,
+    Ping100_110 = 0.14518932,
+    Ping110_120 = 0.14981296,
+    Ping120_130 = 0.15442,
+    Ping130_140 = 0.1579289,
+}
+
+getgenv().Chat = {
+    -- Changes setting on chat
+    Enabled = false,
+    Settings = {
+        Prediction = "/e pred", -- number example: /e pred 0.125
+        AutoPrediction = "/e autopred", -- true or false example: /e autopred true
+        Antilock = "/e antilock", -- true or false example: /e antilock true
+        AntiLockMode = "/e antilockmode" -- NormalDS or PredictionDisabler example: /e antilockmode NormalDS
+    }
+}
+
+loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/cb48d97d43d9327c6207809c799bf84c.lua"))()
