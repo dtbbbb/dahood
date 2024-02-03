@@ -1,0 +1,144 @@
+script_key="IhnWzaHHgyIDtAUjhOavCKUvVpjVzuwj";
+
+getgenv().Stellar = {
+    Global = {
+        Friend_Check    = false,
+        Crew_Check      = true,
+        Wall_Check      = true
+    },
+    Spin = {
+        Enabled         = true,
+        Keybind         = Enum.KeyCode.Q,
+        Speed           = math.pi / 0.165, -- // pi/2 radians or 180 degrees per second
+
+        InternalEnabled = false, -- // do not touch
+        CurrentAngle    = 69 -- // do not touch
+    },
+    Silent = {
+        Enabled       = false,
+        Toggle        = "V",
+        Prediction    = 0.1365,
+        HitChance     = 100,
+        Customization = {
+            FOVType          = 3, -- 1 or 2 or 3
+            Type3Leeway      = true,
+            VisualiseType3   = false,
+            ScaleFactorType3 = 0.5,
+            Type2Rectangle   = true,
+            RectangleWidth   = 45,
+            RectangleHeight  = 70,
+            ShowFOV          = false,
+            Radius           = 42,
+            Color            = Color3.fromRGB(145, 0, 0),
+            Filled           = true,
+            Transparency     = 0.25
+        },
+        GunSpecific = {
+            Enabled = true,
+            Detection = { Close = 35, Mid = 65, Far = math.huge },
+            Pistols = {
+                FOV = { Close = 10, Mid = 8, Far = 4 },
+                Prediction = { Close = 0.1345, Mid = 0.1365, Far = 0.1325 },
+                HitChance = { Close = 15, Mid = 30, Far = 60 }
+            },
+            Shotguns = {
+                FOV = { Close = 15, Mid = 12, Far = 8 },
+                Prediction = { Close = 0.1365, Mid = 0.1385, Far = 0.1325 },
+                HitChance = { Close = 65, Mid = 45, Far = 20 }
+            },
+            Automatics = {
+                FOV = { Close = 15, Mid = 13, Far = 11 },
+                Prediction = { Close = 0.132, Mid = 0.1256, Far = 0.1254 },
+                HitChance = { Close = 25, Mid = 50, Far = 75 }
+            },
+            Other = {
+                FOV = { Close = 15, Mid = 13, Far = 11 },
+                Prediction = { Close = 0.132, Mid = 0.1256, Far = 0.1254 },
+                HitChance = { Close = 25, Mid = 50, Far = 75 }
+            }
+        }
+    },
+    Camlock = {
+        Enabled                      = false,
+        Smoothing                    = 0.15,
+        EasingStyle                  = Enum.EasingStyle.Exponential,
+        EasingDirection              = Enum.EasingDirection.InOut,
+        Sensitivity                  = 1.2,
+        Prediction                   = 0.1105, -- // Prediction
+        Toggle                       = "T", -- // Keybind
+        Part                         = "Head", -- // AimPart
+        AirPart                      = "Head", -- // AimPart when Target is in air
+        AirSmoothing                 = 0.1, -- // Smoothing when Target is in air
+        AirPrediction                = 0.1006, -- // Predicition when Target is in air
+        Disable_On_ThirdPerson       = true,
+        Disable_On_Reload            = true,
+        Disable_When_Not_Holding_Gun = false,
+        GunSpecific = {
+            Enabled = false,
+            Detection = { Close = 35, Mid = 65, Far = math.huge },
+
+            Pistols = {
+                Smoothing = { Close = 0.26, Mid = 0.3, Far = 0.315 },
+                Prediction = { Close = 0.15, Mid = 0.12, Far = 0.13 },
+                Part = { Close = "Head", Mid = "UpperTorso", Far = "UpperTorso" },
+                AirSmoothing = { Close = 0.34, Mid = 0.36, Far = 0.33 },
+                AirPrediction = { Close = 0.11, Mid = 0.1, Far = 0.13 },
+                AirPart = { Close = "Head", Mid = "Head", Far = "UpperTorso" },
+                Sensitivity = { Close = 0.25, Mid = 0.25, Far = 0.25 }
+            },
+            Shotguns = {
+                Smoothing = { Close = 0.26, Mid = 0.3, Far = 0.315 },
+                Prediction = { Close = 0.15, Mid = 0.12, Far = 0.13 },
+                Part = { Close = "Head", Mid = "UpperTorso", Far = "UpperTorso" },
+                AirSmoothing = { Close = 0.34, Mid = 0.36, Far = 0.33 },
+                AirPrediction = { Close = 0.11, Mid = 0.1, Far = 0.13 },
+                AirPart = { Close = "Head", Mid = "Head", Far = "UpperTorso" },
+                Sensitivity = { Close = 0.25, Mid = 0.25, Far = 0.25 }
+            },
+            Automatics = {
+                Smoothing = { Close = 0.26, Mid = 0.3, Far = 0.315 },
+                Prediction = { Close = 0.15, Mid = 0.12, Far = 0.13 },
+                Part = { Close = "Head", Mid = "UpperTorso", Far = "UpperTorso" },
+                AirSmoothing = { Close = 0.34, Mid = 0.36, Far = 0.33 },
+                AirPrediction = { Close = 0.11, Mid = 0.1, Far = 0.13 },
+                AirPart = { Close = "Head", Mid = "Head", Far = "UpperTorso" },
+                Sensitivity = { Close = 0.25, Mid = 0.25, Far = 0.25 }
+            }
+        }
+    },
+    TriggerBot = {
+        Enabled               = true,
+        Prediction            = 0.124, -- // If GunSpecificPrediction is false
+        Cooldown              = 0.001,
+        Toggle                = "C",
+        GunSpecificPrediction = {
+            Enabled = true,
+
+            Detection = { Close = 35, Mid = 65, Far = math.huge },
+            Pistols = { Close = 0.13, Mid = 0.1256, Far = 0.12125 },
+            Shotguns = { Close = 0.132, Mid = 0.127, Far = 0.124 },
+            Other = { Close = 0.132, Mid = 0.1256, Far = 0.1254 }
+        }
+    },
+    Misc = {
+        MemorySpoofer = {
+            Percent = 100 -- // %
+        },
+        SpeedThreshold = 65,
+        Macro = {
+            Enabled     = false,
+            MacroKey    = "x",
+            MacroSpeed  = 2,
+            MacroType   = "mouse", -- // Normal or Mouse (It doesn't matter if it's in upper or lower case.)
+            MacroToggle = "hold" -- // Hold or Press (It doesn't matter if it's in upper or lower case.)
+        }
+    },
+    Prediction = {
+        Enabled            = true,
+        RangeCoefficient   = 0.01,
+        AdditionalInterval = 10 / 205,
+        Precision          = 5
+    }
+}
+
+loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/1955c3ce1b438b89c548557ac3f94675.lua"))()
