@@ -19,7 +19,7 @@ getgenv().Looten = {
           NearestPoint = true,
           HitPart = 'HumanoidRootPart',
       },
-      Prediction = {
+      Prediction = 
           Enabled = true,
           AutoMated = false, -- auto prediction
           Prediction = 0.125,
@@ -47,8 +47,8 @@ getgenv().Looten = {
       },
       Smoothness = {
           Enabled = true,
-          Smoothness = 0.1,
-          AirShot = 0.1,
+          Smoothness = 0.900000000000,
+          AirShot = 0.900000000000,
       },
       Shake = {
           Enabled = false,
