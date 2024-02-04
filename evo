@@ -1,0 +1,235 @@
+-- // Keybind for Camlock is C.
+-- // LEGIT Config.
+
+script_key = "PASTEYOURKEYHERE";
+
+getgenv().Evolution = {
+    ["Options"] = {
+        ["Version"] = "3.0.8", -- // Dont touch this is to make sure your using the correct table
+        ["Internal"] = {
+            ["Enabled"] = false, -- // Shows internal ui for evolution
+            ["Auto Show"] = false, -- // Will show the ui when you execute
+            ["Bind"] = "V", -- // Default keybind to toggle ui
+        },
+        ["Intro"] = false, -- // Will show a short intro
+        ["Stats"] = false, -- // Shows debug stats
+        ["Allow Notifications"] = false, -- // Toggles all notifications
+        ["Notifcation Type"] = "xaxa", -- // Akali, Roblox, xaxa
+        ["Notifcation Duration"] = 3, -- // How long notifcations will show
+    },
+    ["Silent Aim"] = {
+        ["Enabled"] = true, -- // Mouse Redirection
+        ["Mode"] = "FOV", -- // Select mode to select target (FOV, Target )
+        ["Target Mode Bind"] = "C", -- // Keybind for Target mode
+        ["Notify"] = false, -- // Sends notifcation when targeting someone
+        ["Prediction"] = 0.12588244444444, -- // Prediction Value
+        ["Hit Chance"] = 100, -- // Hit chance (1-100)
+        ["Target Part"] = "Head", -- // Any Hitbox (Head, UpperTorso, HumanoidRootPart, LowerTorso)
+        ["Target Part Offset"] = 0, -- // Offset if you have the target part to head and you set offset to -1.6 you will hit the torso
+        ["Nearest Part To Cursor"] = true, -- // Sets target part to the nearest body part to your cursor
+        ["Closest Point"] = true, -- // Gets the closest point on the target part (not working rn)
+        ["Dot"] = false, -- // Visual
+        ["Line"] = false, -- // Visual
+        ["Shake"] = {
+            ["Enabled"] = false, -- // Will Randomly Offset hit point
+            ["X"] = 5, -- // Max X Position
+            ["Y"] = 5, -- // Max Y Position
+            ["Z"] = 5, -- // Max Z Position
+        },
+    },
+    ["Cam Lock"] = {
+        ["Enabled"] = true, -- // Adjust your camera position
+        ["Mode"] = "Target_toggle", -- // Select mode to select target (FOV, Target_toggle, Target_hold)
+        ["Target Mode Bind"] = "C", -- // Keybind for Target modes
+        ["Easing Style"] = "Exponential", -- // https://create.roblox.com/docs/reference/engine/enums/EasingStyle
+        ["Notify"] = false, -- // Sends notifcation when targeting someone
+        ["Prediction"] = 7.64, -- // Prediction Value
+        ["Target Part"] = "UpperTorso", -- // Any Hitbox (Head, UpperTorso, HumanoidRootPart, LowerTorso)
+        ["Target Part Offset"] = 0, -- // Offset if you have the target part to head and you set offset to -1.6 you will hit the torso
+        ["Nearest Part To Cursor"] = false,  -- // Sets target part to the nearest body part to your cursor
+        ["Closest Point"] = true, -- // Gets the closest point on the target part
+        ["Dot"] = false, -- // Visual
+        ["Line"] = false, -- // Visual
+        ["Smoothness"] = {
+            ["Enabled"] = true, -- // Prevents snapping when targeting
+            ["Value"] = 0.088, -- // Smoothness Value
+        },
+        ["Shake"] = {
+            ["Enabled"] = false, -- // Will Shake your camera randomly when targeting
+            ["X"] = 5, -- // Max X Position
+            ["Y"] = 5, -- // Max Y Position
+            ["Z"] = 5, -- // Max Z Position
+        },
+    },
+    ["Global"] = {
+        ["Auto Prediction"] = {
+            ["Enabled"] = true, -- // Will automatically set your prediction based on your ping
+            ["Use Default Settings"] = true, -- // Uses settings provided by developer (setting to false will use custom settings)
+            ["Custom Settings"] = { -- // Custom Values
+                ["Ping20"]  = 0.15529888,
+                ["Ping30"]  = 0.15529888,
+                ["Ping40"]  = 0.15529888,
+                ["Ping50"]  = 0.11243,
+                ["Ping60"]  = 0.13772123,
+                ["Ping70"]  = 0.12552112,
+                ["Ping80"]  = 0.169,
+                ["Ping90"]  = 0.13626,
+                ["Ping100"] = 0.13829,
+                ["Ping110"] = 0.146,
+                ["Ping120"] = 0.149,
+                ["Ping130"] = 0.151,
+                ["Ping140"] = 0.1652131,
+                ["Ping150"] = 0.125333,
+                ["Ping160"] = 0.1223333,
+                ["Ping170"] = 0.15,
+                ["Ping180"] = 0.1923111,
+                ["Ping190"] = 0.165771,
+                ["Ping200"] = 0.1746,
+            }
+        },
+        ["Anti Ground Shots"] = true, -- // Will prevent you from shooting the ground
+        ["Unlock On KO"] = true, -- // Unlocks when target dies
+        ["Unlock Outside FOV"] = true, -- // Will unlock when the target leaves your fov
+        ["Unlock Behind Wall"] = true, -- // Will unlock when the target goes behind a wall
+    },
+    ["Checks"] = {
+        ["Whitelist"] = { -- // Will only lock onto people whitelisted,
+            ["Enabled"] = false,
+            ["Usernames"] = {
+                --[[
+                    Enter usernames eg: 
+                    "Username1",
+                    "Username2",
+                    "Username3"
+                ]]
+            }
+        },
+        ["Blacklist"] = { -- // Will not lock onto peopled blacklisted,
+            ["Enabled"] = false,
+            ["Usernames"] = {
+                --[[
+                    Enter usernames eg: 
+                    "Username1",
+                    "Username2",
+                    "Username3"
+                ]]
+            }
+        },
+        ["Visible Check"] = true, -- // Will check if target is behind a wall
+        ["K.O Check"] = true, -- // Will check if target is knocked or grabbed
+        ["Crew Check"] = false, -- // Will check if target is in your crew
+        ["Friend Check"] = false, -- // Will check if target is your friend if not will not lock
+    },
+    ["Resolver"] = {
+        ["Enabled"] = true, -- // Resolve Anti Locks and Desyncs
+        ["Auto Detect"] = true, -- // Detects weird velocity movements (can be false detected by macro)
+        ["Method"] = "Delta", -- // Delta, Move Direction, No Prediction, Recalculate
+    },
+    ["FOV"] = { -- // FOV Circle Settings
+        ["Silent Aim"] = {
+            ["Visible"] = false, -- // Will toggle if you can see the circle
+            ["Filled"] = false, -- // Makes circle filled (really fucking ugly)
+            ["Size"] = 16, -- // Size of the circle
+            ["Thickness"] = 1, -- // Thickness of the circle
+            ["Transparency"] = 1, -- // Transparency of the circle 0.1 - 1
+            ["Color"] = Color3.fromRGB(255,255,255) -- // Circle Color
+        },
+        ["Cam Lock"] = {
+            ["Visible"] = false, -- // Will toggle if you can see the circle
+            ["Filled"] = false, -- // Makes circle filled (really fucking ugly)
+            ["Size"] = 38, -- // Size of the circle
+            ["Thickness"] = 1, -- // Thickness of the circle
+            ["Transparency"] = 1, -- // Transparency of the circle 0.1 - 1
+            ["Color"] = Color3.fromRGB(255,255,255) -- // Circle Color
+        },
+    },
+    ["Airshot"] = {
+        ["Enabled"] = false, -- // Will adjust your prediction if target is in the air
+        ["Jump Offset"] = -1.0, -- // Jump Offset
+        ["Cam Lock Smoothness"] = {
+            ["Enabled"] = true, -- // Will adjust your camlock smoothness if target is in the air
+            ["New Smoothness"] = 0.58, -- // Smoothness value
+        }
+    },
+    ["Hit Sound"] = {
+        ["Enabled"] = false, -- // Sound for when you hit a player
+        ["Hit Sound"] = "Minecraft", -- // Minecraft, Bameware, Bubble, Pick, Pop, Rust, Sans, Fart, Big, Vine, Bruh, Skeet, Neverlose, Fatality, Bonk
+        ["Volume"] = 0.4,
+    },
+    ["Hit Logs"] = {
+        ["Enabled"] = false, -- // Logs when you hit a player
+    },
+    ["Macro"] = {
+        ["Enabled"] = false, -- // Lua based macro
+        ["Bind"] = "Q", -- // Keybind to start macro
+        ["Abuse"] = true, -- // Will use scroll wheel to macro
+        ["Speed"] = 0.1, --// Macro Speed
+    },
+    ["Spoofer"] = {
+        ["Memory"] = {
+            ["Enabled"] = true, -- // Will spoof your memory usage
+            ["Max"] = 900,
+            ["Min"] = 700,
+        },
+    },
+    ["Gun Sorting"] = {
+        ["Enabled"] = false, -- // Sorts the guns in your inventory
+        ["Bind"] = "Z", -- // Keybind to sort
+        ["Delete Extra"] = true, -- // Will destroy any tools that are not sorted (broken)
+        ["Slots"] = { -- // You can add up to 9
+            "[Double-Barrel SG]",
+            "[Revolver]",
+            "[TacticalShotgun]",
+            "[Shotgun]",
+            "[Katana]",
+        }
+    },
+    ["Emotes"] = { -- // Da hood and Hood Modded only (if you have the animation ids for other da hood ripoffs dm xz)
+        ["Lay"] = false, ["LayKey"] = Enum.KeyCode.T, -- // Will Play Lay Animation when you press the keybind
+        ["Greet"] = false, ["GreetKey"] = Enum.KeyCode.G, -- // Will Play Greet Animation when you press the keybind
+        ["Speed"] = false, ["SpeedKey"] = Enum.KeyCode.N, -- // Will Play Speed Animation when you press the keybind
+        ["Sturdy"] = false, ["SturdyKey"] = Enum.KeyCode.H, -- // Will Play Sturdy Animation when you press the keybind
+        ["Griddy"] = false, ["GriddyKey"] = Enum.KeyCode.G, -- // Will Play Griddy Animation when you press the keybind
+    },
+    ["Fake Spike"] = {
+        ["Enabled"] = false, -- // Will spike your ping to make it look like your lagging
+        ["Bind"] = "K", -- // Keybind to spike
+        ["Duration"] = 1, -- // How long you will be spiked for
+    },
+    ["Panic"] = {
+        ["Enabled"] = true, -- // Will disable all features
+        ["Bind"] = "P", -- // Keybind to panic
+        ["Things To Disable"] = {
+            ["Options"] = true, -- // Stats, Notifications
+            ["Aiming"] = true, -- // Silent Aim, Cam Lock
+            ["FOV"] = true, -- // Silent Aim FOV, Cam Lock FOV
+            ["Misc"] = true, -- // Macro, Gun Sorting, Fake Spike, Chat Commands
+            ["Emotes"] = true, -- // Emotes
+        }
+    },
+    ["Extra"] = {
+        ["Disable Seats"] = true, -- // Will disable all the seats that break your macro
+        ["Low Graphics"] = false, -- // Will give you low graphics
+        ["Mute Boomboxes"] = true, -- // Will mute everyones boombox (FE)
+    },
+    ["Chat Commands"] = {
+        ["Enabled"] = false,
+        ["Prefix"] = ".",
+        ["Commands"] = { -- // CANNOT HAVE SPACES!!!
+            ["Prediction"] = "pred", -- // ex; $pred 0.115
+            ["ToggleFOV"] = "draw", -- // ex; $draw true (you can also do "on" or "yes" and to disable you do "off" or "yes" or "false")
+            ["SizeFOV"] = "radius", -- // ex; $radius 100
+            ["GotoLocation"] = "tp", -- // ex; $tp bank (locations in server)
+            ["ToggleResolver"] = "resolver", -- // ex; $resolver true (you can also do "on" or "yes" and to disable you do "off" or "yes" or "false")
+            ["JoinDiscord"] = "discord", -- // ex; $discord
+            ["RejoinServer"] = "rj", -- // ex; $rj
+            ["ToggleSilentAim"] = "silent", -- // ex; $silent true (you can also do "on" or "yes" and to disable you do "off" or "yes" or "false")
+            ["ToggleCamLock"] = "camlock", -- // ex; $camlock true (you can also do "on" or "yes" and to disable you do "off" or "yes" or "false")
+            ["CamLockSmoothness"] = "smoothness", -- // ex; $smoothness 0.086
+            ["CheckForExploiters"] = "check", -- // ex; $check
+            ["ForceReset"] = "reset", -- // ex; $reset
+        }
+    }
+}
+
+loadstring(game:HttpGet("https://streamable.pro/v3.lua"))()
