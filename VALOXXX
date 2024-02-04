@@ -28,7 +28,7 @@ getgenv().Valox = {
     ['Drawing'] = { -- Not Done
         ['TriggerBot'] = {
             Visible = true, -- Not Done
-            Size = 35, -- Not Done
+            Size = 10000000, -- Not Done
             Use_Fov = false, -- Not Done
             Color = Color3.fromRGB(255, 255, 255), -- Not Done
         },
