@@ -1,0 +1,77 @@
+script_key="FlpSFPOrCqxISdVeEPKtOInZyvgtdVun";
+
+getgenv().Titanium = {
+    ['Options'] = {
+        Intro = true,
+        ['UnlockFps'] = {
+            Enabled = false,
+            FpsCap = 999
+        }
+    },
+    ['SoftAim'] = {
+        ['Basic'] = {
+            Enabled = true,
+            Mode = "Silent", -- Silent, Target
+            Bone = "HumanoidRootPart",
+            Prediction = 0.13125125125215,
+        },
+        ['Drawings'] = { -- still adding line, 3d box, 3d circle, dot
+            ['FOV'] = {
+                Visible = true,
+                Filled = false,
+                Radius = 35,
+                Transparency = 0.14,
+                Thickness = 1,
+                Color = Color3.fromRGB(255, 255, 255)
+            },
+            ['Line'] = {
+                Visible = true,
+                Transparency = 0.14,
+                Thickness = 1,
+                Color = Color3.fromRGB(255, 255, 255)
+            },
+            ['3D Box'] = {
+                Visible = true,
+                Color = Color3.fromRGB(255, 255, 255),
+                Thickness = 1,
+                Transparency = 1
+            },
+            ['3D Circle'] = {
+                Visible = true,
+                Color = Color3.fromRGB(255, 255, 255),
+                Radius = 3,
+                Filled = true
+            },
+            ['Dot'] = {
+                Visible = true,
+                Filled = false,
+                Radius = 35,
+                Transparency = 0.14,
+                Thickness = 1,
+                Color = Color3.fromRGB(255, 255, 255)
+            }
+        }
+    },
+    ['Checks'] = { -- still doing checks
+        ['Humanized'] = {
+            Wall = false,
+            Knocked = false,
+            Grabbed = false
+        },
+        ['Friendly'] = {
+            Crew_Check = false
+        },
+        ['Safety'] = {
+            NoGroundShots = false
+        }
+    },
+    ['Resolver'] = { -- should work havent tested yet
+        Enabled = false,
+        Index = 1,
+        Interval = 0.00315,
+        Anti_Aim_Viewer = true,
+    },
+    Stored = {},
+}
+
+loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/14693d94cc30ad4a1f39e70c9666b390.lua"))()
