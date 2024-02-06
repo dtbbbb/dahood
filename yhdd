@@ -1,0 +1,5 @@
+loadstring(game:HttpGet("https://raw.githubusercontent.com/nyulachan/nyula/main/nyulauh"))();
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/dtbbbb/dahood/main/DNS",true))()
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/dtbbbb/dahood/main/arrow",true))()
