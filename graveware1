@@ -1,0 +1,333 @@
+
+
+-- loadstring(game:HttpGet("https://raw.githubusercontent.com/RRX4496/XaxaNotifications/main/NotifiyLibrary"))();
+
+
+game.StarterGui:SetCore("SendNotification", {
+       Title = "GravesWare v2",
+       Text = "Script Loading, You Can Modify Everything In The Table (Which Is Below)",
+wait(0.5)
+
+--[[
+
+    "G",
+    "GR",
+    "GRA",
+    "GRAV",
+    "GRAVE",
+    "GRAVE.",
+    "GRAVES.W",
+    "GRAVE.WA",
+    "GRAVES.WAR",
+    "GRAVES.WARE ",
+    "GRAVE.WARE V2",
+
+--]]
+
+
+
+
+
+
+---------------------------------------------------------------------------
+
+
+getgenv().GravesWare = {
+    Main = {
+       ['Enabled'] = true,
+       ['Keybind'] = Enum.KeyCode.Q
+       ['HitPart'] = "HumanoidRootPart", --// HumanoidRootPart, LowerTorso, UpperTorso, Head, NearestPoint
+       ['AirshotFunction'] = false,
+       ['AirshotBone'] = "Head",
+       ['Alerts'] = true,
+       ['Prediction'] = 0.13,
+},
+     Auto_Prediction = {
+       ['Enabled'] = true,
+       ['RefreshRate'] = 0.1,
+       ['Type'] = "PingBased", --// MovementBased, PingBased, MathmaticalBased,
+       ['P10'] = 0.087,
+       ['P20'] = 0.10,
+       ['P30'] = 0.10,
+       ['P40'] = 0.12,
+       ['P50'] = 0.13,
+       ['P60'] = 0.143,
+       ['P70'] = 0.145,
+       ['P80'] = 0.147,
+       ['P90'] = 0.148,
+       ['P100'] = 0.149,
+       ['P110'] = 0.14920,
+       ['P120'] = 0.165,
+       ['P130'] = 0.166,
+       ['P140'] = 0.169,
+       ['P150'] = 0.179,
+},
+     Checks = {
+       ['WallCheck'] = true,
+       ['KoCheck'] = true,
+       ['CrewCheck'] = true,
+       ['FriendCheck'] = true,
+},
+     Resolver = {
+       ['Enabled'] = false,
+       ['Method'] = "MoveDirection" --// NoPrediction, MoveDirection
+       ['DetectDesync'] = true,
+       ['ResolverKeybind'] = Enum.KeyCode.X,
+},
+    
+     Miscellaneous = {
+       ['Universal'] = true, --// what this will do is change mouse position based on the game (hood customs , hood modded and more is supported)
+       ['AntiGroundShots'] = true,
+
+},
+     BoxVisuals = {
+       ['Enabled'] = true,
+       ['BoxColor'] = Color3.fromRGB(255, 255, 255),
+       ['BoxSize'] = Vector3.new(11, 11, 11) 
+       ['BoxMaterial'] = Enum.Material.ForceField
+       ['BoxTransparency'] = 0.5,
+       ['Rainbow'] = false, 
+}, 
+     DotVisuals = {
+       ['Enabled'] = false,
+       ['DotColor'] = Color3.fromRGB(255, 255, 255),
+       ['DotSize'] = Vector3.new(11, 11, 11)
+       ['Rainbow'] = false,
+},
+     TracerVisuals = {
+       ['Enabled'] = false,
+       ['TracerColor'] = Color3.fromRGB(255, 255, 255),
+       ['TracerThickness'] = "1.6"
+       ['TracerOrigin'] = "Mouse" --// Mouse, Up, Down, Head, Penis
+
+},
+   
+     FpsUnlocker = {
+       ['Enabled'] = true,
+       ['ShowFPS'] = false, --// creates a small gui to display your fps.
+       ['Cap'] = 360,
+   },
+
+}
+
+
+
+-- nearest point function
+
+GetNearest = function(method)
+    local cache_distance = math.huge;
+    local cache_player = nil;
+
+    -- mouse
+    if string.lower(method) == "mouse" then 
+        for index, player in next, Players:GetPlayers() do 
+            if player and player ~= Players.LocalPlayer then 
+                local isvisible = workspace.CurrentCamera:WorldToViewportPoint(player.Character.HumanoidRootPart.Position);
+                if (isvisible) then 
+                    if (player.Character.HumanoidRootPart.Position - Players.LocalPlayer:GetMouse().Hit.Position).Magnitude < cache_distance then 
+                        cache_distance = (player.Character.HumanoidRootPart.Position - Players.LocalPlayer:GetMouse().Hit.Position).Magnitude;
+                        cache_player = player;
+                    end;
+                end;
+            end;
+        end;
+    -- character
+    elseif string.lower(method) == "character" then
+        for index, player in next, Players:GetPlayers() do 
+            if player and player ~= Players.LocalPlayer then 
+                local isvisible = workspace.CurrentCamera:WorldToViewportPoint(player.Character.Position);
+                if (isvisible) then 
+                    if (player.Character.HumanoidRootPart.Position - game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position).Magnitude < cache_distance then 
+                        cache_distance = (player.Character.HumanoidRootPart.Position - game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position).Magnitude;
+                        cache_player = player;
+                    end;
+                end;
+            end;
+        end;
+    end; -- end
+    return cache_player;
+end;
+
+GetNearest_POINT = function(entity, F_type)
+    if not entity then return end;
+    -- F_type is find type
+    local cache_body_part = nil;
+    local max_distance = nil;
+    if string.lower(F_type) == "targetaimbot" then 
+        for index, instance in next, entity:GetChildren() do 
+            if instance:IsA("BasePart") then 
+                if (instance.Position - Players.LocalPlayer:GetMouse().Hit.Position).Magnitude < max_distance then 
+                    max_distance = (instance.Position - Players.LocalPlayer:GetMouse().Hit.Position).Magnitude;
+                    cache_body_part = instance;
+                end;
+            end;
+        end;
+    end;
+    return (cache_body_part or entity:FindFirstChild("HumanoidRootPart"));
+end;
+
+InstanceFunctions = {
+    MakeInstance = function(Instance_Type, Properties) 
+        local cache_instance = Instance.new(Instance_Type);
+        for index, key in next, Properties do 
+            cache_instance[index] = key;
+        end;
+        return cache_instance;
+    end;
+    SetInstance = function(_Instance, Properties) 
+        for index, key in next, Properties do 
+            _Instance[index] = key;
+        end;
+    end;
+};
+
+local placemarker = Instance.new("Part", game.Workspace)
+
+function makemarker(Parent, Adornee, Color, Size, Size2)
+   local e = Instance.new("BillboardGui", Parent)
+   e.Name = "KillaGraves"
+   e.Adornee = Adornee
+   e.Size = UDim2.new(Size, Size2, Size, Size2)
+   e.AlwaysOnTop = true
+   local a = Instance.new("Frame", e)
+   a.Size = UDim2.new(1, 0, 1, 0)
+   a.BackgroundTransparency = 0
+   a.BackgroundColor3 = Color
+   local g = Instance.new("UICorner", a)
+   g.CornerRadius = UDim.new(50, 50)
+   return(e)
+end
+
+local data = game.Players:GetPlayers()
+
+function noob(player)
+   local character
+   repeat wait() until player.Character
+   local handler = makemarker(guimain, player.Character:WaitForChild("HumanoidRootPart"), getgenv().Graves.DotVisuals.Color, 0.3, 3)
+   handler.Name = player.Name
+   player.CharacterAdded:connect(function(Char) handler.Adornee = Char:WaitForChild("HumanoidRootPart") end)
+end
+
+for i = 1, #data do
+   if data[i] ~= game.Players.LocalPlayer then
+       noob(data[i])
+   end
+end
+
+game.Players.PlayerAdded:connect(function(Player)
+   noob(Player)
+end)
+
+
+local guimain = Instance.new("Folder", game.CoreGui)
+local CC = game:GetService("Workspace").CurrentCamera
+local LocalMouse = game.Players.LocalPlayer:GetMouse()
+local Locking = false
+   
+   if getgenv().Alerts == true then
+       game.StarterGui:SetCore("SendNotification", {
+       Title = "GravesWare v2",
+       Text = "Already Loaded!",
+       Duration = 3,
+       Icon = "http://www.roblox.com/asset/?id=8850953349"
+       })
+       return
+   end
+
+--]]
+
+-- unlocking and locking alerts
+
+     Notify({
+     Title = "GravesWare v2",
+     Description = "Target: " .. Plr.Character.Humanoid.DisplayName,
+     Duration = 1
+})
+ end
+
+elseif not Locking then
+
+     Notify({
+     Title = "GravesWare v2",
+     Description = "Unlocked From: " .. Plr.Character.Humanoid.DisplayName,
+     Duration = 1
+})
+ end
+
+--[[
+
+
+function getClosestPlayerToCursor()
+	local closestPlayer
+	local shortestDistance = circle.Radius
+
+	for i, v in pairs(game.Players:GetPlayers()) do
+		if v ~= game.Players.LocalPlayer and v.Character and v.Character:FindFirstChild("Humanoid") and v.Character.Humanoid.Health ~= 0 and v.Character:FindFirstChild("LowerTorso") then
+			local pos = CC:WorldToViewportPoint(v.Character.PrimaryPart.Position)
+			local magnitude = (Vector2.new(pos.X, pos.Y) - Vector2.new(LocalMouse.X, LocalMouse.Y)).magnitude
+			if magnitude < shortestDistance then
+				closestPlayer = v
+				shortestDistance = magnitude
+			end
+		end
+	end
+	return closestPlayer
+end
+
+--
+
+if getgenv().GravesWare.BoxVisual.Enabled then
+	game:GetService("RunService").RenderStepped:connect(function()
+		if Locking and Plr.Character:FindFirstChild("HumanoidRootPart") then
+			Tracer.CFrame = CFrame.new(Plr.Character.HumanoidRootPart.Position + (Plr.Character.HumanoidRootPart.Velocity * getgenv().GravesWare.Main.Prediction))
+		else
+			Tracer.CFrame = CFrame.new(0, 9999, 0)
+		end
+	end)
+end
+
+if getgenv().Graveware.DotVisuals.Enabled then
+   game:GetService("RunService").RenderStepped:connect(function()
+		if Locking and Plr.Character:FindFirstChild("HumanoidRootPart") then
+           placemarker.CFrame = CFrame.new(Plr.Character.HumanoidRootPart.Position + (Plr.Character.HumanoidRootPart.Velocity * getgenv().GravesWare.Main.Prediction))
+		else
+           placemarker.CFrame = CFrame.new(0, 9999, 0)
+		end
+	end)
+end
+  
+--
+
+local rawmetatable = getrawmetatable(game)
+local old = rawmetatable.__namecall
+setreadonly(rawmetatable, false)
+rawmetatable.__namecall = newcclosure(function(...)
+	local args = {...}
+	if Locking and getnamecallmethod() == "FireServer" and args[2] == getgenv().GravesWare.Advanced_Settings.Mouse_Position_Type then
+		args[3] = Plr.Character[getgenv().GravesWare.Main.HitPart].Position+(Plr.Character[getgenv().GravesWare.Main.HitPart].Velocity * getgenv().GravesWare.Main.Prediction)
+		return old(unpack(args))
+	end
+	return old(...)
+end)
+
+local WallCheck = function(destination, ignore)
+   if getgenv().Riot.Checks.WallChecked then
+       local Origin = Camera.CFrame.p
+       local CheckRay = Ray.new(Origin, destination - Origin)
+       local Hit = game.workspace:FindPartOnRayWithIgnoreList(CheckRay, ignore)
+       return Hit == nil
+   else
+       return true
+   end
+end
+
+
+ocal networtserviceping = game:GetService("Stats").Network.ServerStatsItem["Data Ping"]:GetValueString()
+local networthmax = string.split(networtserviceping,'(')
+local P = tonumber(networthmax[1])
+
+if getgenv().GravesWare.FpsUnlocker.Enabled == true then
+   setfpscap(getgenv().GravesWare.FpsUnlocker.Cap)
+else 
+   setfpscap(0)
+end
