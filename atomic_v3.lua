@@ -1,4 +1,4 @@
-getgenv().WhitelistKey = "KEYHERE"
+getgenv().WhitelistKey = "kkm7v6WYPzIGJx2rNiMLSRxx2EpV6LoR"
 
 getgenv().Version = "Mobile"
 
